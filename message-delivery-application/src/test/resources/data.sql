@@ -1,0 +1,2 @@
+INSERT INTO batch (id, creation_date, creation_user, deleted, last_modification_date, last_modification_user, intent, result, status)
+values (NULL, SYSDATE, 'TEST', FALSE, SYSDATE, 'TEST', 0, '', 'CREATED');
