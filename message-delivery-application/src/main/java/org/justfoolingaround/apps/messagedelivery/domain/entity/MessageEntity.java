@@ -22,7 +22,7 @@ import java.util.Date;
 @Entity
 @Table(name = "message")
 @EntityListeners(AuditListener.class)
-@Where(clause = "deleted is false")
+@Where(clause = "deleted = false")
 @ToString(callSuper = true)
 public class MessageEntity extends BaseEntity implements Serializable {
 

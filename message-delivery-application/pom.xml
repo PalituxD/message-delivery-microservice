@@ -26,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <start-class>org.justfoolingaround.apps.bpt.App</start-class>
+        <start-class>org.justfoolingaround.apps.messagedelivery.App</start-class>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPaths>./target/jacoco.exec</sonar.jacoco.reportPaths>
@@ -150,7 +150,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.justfoolingaround.apps.bpt.App</mainClass>
+                    <mainClass>org.justfoolingaround.apps.messagedelivery.App</mainClass>
                 </configuration>
                 <executions>
                     <execution>

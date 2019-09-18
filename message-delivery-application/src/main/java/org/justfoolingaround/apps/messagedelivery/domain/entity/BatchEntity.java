@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "batch")
 @EntityListeners(AuditListener.class)
-@Where(clause = "deleted is false")
+@Where(clause = "deleted = false")
 @ToString(callSuper = true, exclude = "messages")
 public class BatchEntity extends BaseEntity implements Serializable {
 

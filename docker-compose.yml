@@ -1,0 +1,51 @@
+version: '3.4'
+services:
+  database:
+    container_name: database
+    build:
+      context: $PWD/database
+    restart: always
+    ports:
+    - "${ENV_DATABASE_PORTS}"
+    volumes:
+    - ./database/scripts/:/docker-entrypoint-initdb.d:ro
+    - db-data:/var/lib/mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=${ENV_DATABASE_ROOT_PASSWORD}
+    - MYSQL_DATABASE=${ENV_DATABASE_SCHEMA}
+    - MYSQL_USER=${ENV_DATABASE_APPLICATION_USER}
+    - MYSQL_PASSWORD=${ENV_DATABASE_APPLICATION_PASSWORD}
+    healthcheck:
+      test: mysqladmin -h 'localhost' -u root -p${ENV_DATABASE_ROOT_PASSWORD} ping --silent
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 60s
+  message-delivery-application:
+    container_name: message-delivery-application  
+    build:
+      context: $PWD/message-delivery-application
+    depends_on:
+      - database
+    restart: always
+    ports:
+    - "${ENV_APPLICATION_PORTS}"
+    env_file:
+    - ./.email.env
+    environment:
+    - ENV_APPLICATION_ENTRY_POINT=${ENV_APPLICATION_ENTRY_POINT}
+    - ENV_APPLICATION_PORT=${ENV_APPLICATION_PORT}
+    - ENV_APPLICATION_CONTEXT_PATH=${ENV_APPLICATION_CONTEXT_PATH}
+    - ENV_DATABASE_SERVER=database
+    - ENV_DATABASE_PORT=${ENV_DATABASE_PORT}
+    - ENV_DATABASE_SCHEMA=${ENV_DATABASE_SCHEMA}
+    - ENV_DATABASE_APPLICATION_USER=${ENV_DATABASE_APPLICATION_USER}
+    - ENV_DATABASE_APPLICATION_PASSWORD=${ENV_DATABASE_APPLICATION_PASSWORD}
+    healthcheck:
+      test: curl -f http://message-delivery-application:${ENV_APPLICATION_PORT}${ENV_APPLICATION_CONTEXT_PATH}/actuator/health || exit 1
+      interval: 1m
+      timeout: 2s
+      retries: 5
+volumes:
+  db-data:
+    driver: local
