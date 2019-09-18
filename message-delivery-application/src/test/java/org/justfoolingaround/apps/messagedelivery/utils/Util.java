@@ -1,6 +1,8 @@
 package org.justfoolingaround.apps.messagedelivery.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
+import org.json.JSONObject;
 import org.justfoolingaround.apps.messagedelivery.domain.entity.BatchEntity;
 import org.justfoolingaround.apps.messagedelivery.domain.entity.MessageEntity;
 import org.justfoolingaround.apps.messagedelivery.domain.enums.BatchStatus;
@@ -16,26 +18,28 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 public class Util {
 
     public static MessageDto generateMessage(String key, int timeInHoursToBeSent) {
 
-        MessageHeaderDto messageHeaderDto = MessageHeaderDto.builder()
-                .payloadId("PAYLOAD" + key)
-                .source("SOURCE" + key)
-                .type("E_MAIL")
-                .build();
+        MessageHeaderDto messageHeaderDto = new MessageHeaderDto();
+        messageHeaderDto.setPayloadId("PAYLOAD" + key);
+        messageHeaderDto.setSource("SOURCE" + key);
+        messageHeaderDto.setType("E_MAIL");
 
-        MessageDto messageDto = MessageDto.builder()
-                .content("Content" + key)
-                .from("FROM" + key + "@GMAIL.COM")
-                .headerDto(messageHeaderDto)
-                .replyTo("REPLYTO" + key)
-                .scheduledDeliveryDate(Calendar.getInstance().getTime())
-                .subject("SUBJECT" + key)
-                .to("EMAIL" + key + "@GMAIL.COM").build();
+        MessageDto messageDto = new MessageDto();
+        messageDto.setContent("Content" + key);
+        messageDto.setFrom("FROM" + key + "@GMAIL.COM");
+        messageDto.setHeaderDto(messageHeaderDto);
+        messageDto.setReplyTo("REPLYTO" + key);
+        messageDto.setScheduledDeliveryDate(Calendar.getInstance().getTime());
+        messageDto.setSubject("SUBJECT" + key);
+        messageDto.setTo("EMAIL" + key + "@GMAIL.COM");
 
         messageDto.setScheduledDeliveryDate(increaseTimeInHours(messageDto.getScheduledDeliveryDate(), timeInHoursToBeSent));
+
+        log.debug("Generated MessageDto: {}", messageDto);
 
         return messageDto;
     }

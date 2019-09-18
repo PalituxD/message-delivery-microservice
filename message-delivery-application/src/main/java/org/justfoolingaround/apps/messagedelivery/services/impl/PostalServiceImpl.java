@@ -81,8 +81,8 @@ public class PostalServiceImpl implements PostalService {
 
     private MessageInfoDto getMessageInfo(Message message) {
 
-        MessageInfoDto messageInfoDto = MessageInfoDto.builder().build();
-        MessageHeaderDto messageHeaderDto = MessageHeaderDto.builder().build();
+        MessageInfoDto messageInfoDto = new MessageInfoDto();
+        MessageHeaderDto messageHeaderDto = new MessageHeaderDto();
 
         modelMapper.map(message, messageInfoDto);
         modelMapper.map(message, messageHeaderDto);
