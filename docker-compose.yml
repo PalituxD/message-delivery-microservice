@@ -1,7 +1,10 @@
 version: '3.4'
 services:
   database:
+    image: 192.168.99.1:5001/database
     container_name: database
+    networks:
+    - netdb
     build:
       context: $PWD/database
     restart: always
@@ -22,11 +25,17 @@ services:
       retries: 10
       start_period: 60s
   message-delivery-application:
-    container_name: message-delivery-application  
+    image: 192.168.99.1:5001/message-delivery-application
+    container_name: message-delivery-application
+    networks:
+    - netdb
     build:
       context: $PWD/message-delivery-application
     depends_on:
       - database
+    deploy:
+      mode: replicated
+      replicas: 5
     restart: always
     ports:
     - "${ENV_APPLICATION_PORTS}"
@@ -42,10 +51,12 @@ services:
     - ENV_DATABASE_APPLICATION_USER=${ENV_DATABASE_APPLICATION_USER}
     - ENV_DATABASE_APPLICATION_PASSWORD=${ENV_DATABASE_APPLICATION_PASSWORD}
     healthcheck:
-      test: curl -f http://message-delivery-application:${ENV_APPLICATION_PORT}${ENV_APPLICATION_CONTEXT_PATH}/actuator/health || exit 1
+      test: curl -f http://localhost:${ENV_APPLICATION_PORT}${ENV_APPLICATION_CONTEXT_PATH}/actuator/health || exit 1
       interval: 1m
       timeout: 2s
       retries: 5
 volumes:
   db-data:
     driver: local
+networks:
+  netdb:
